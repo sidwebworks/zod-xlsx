@@ -2,8 +2,10 @@
 
 # ZOD-XLSX
 
-![npm version](https://badgen.net/npm/v/zod-xlsx)
+[![npm version](https://badgen.net/npm/v/zod-xlsx)](https://www.npmjs.com/package/zod-xlsx)
 ![npm downloads](https://badgen.net/npm/dt/zod-xlsx)
+[![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
+
 
 > A xlsx based resource validator using Zod schemas
 
