@@ -1,6 +1,6 @@
 import { utils, WorkBook } from "xlsx"
 import { ZodError, ZodSchema } from "zod"
-import { ValidatorOptions } from "./types"
+import type { Result, ValidatorOptions } from "./types"
 import { defaultsOptions, toObject } from "./utils"
 
 function createValidator(workbook: WorkBook, opts?: ValidatorOptions) {
@@ -29,16 +29,18 @@ function createValidator(workbook: WorkBook, opts?: ValidatorOptions) {
     const data = toObject(row, header)
     try {
       await schema.parseAsync(data)
+      options.onValid && options.onValid(data)
       return { issues: [], isValid: true, data }
     } catch (error) {
       if (error instanceof ZodError) {
+        options.onInvalid && options.onInvalid(data)
         return { issues: error.issues, isValid: false, data }
       }
       throw error
     }
   }
 
-  const validate = async (schema: ZodSchema) => {
+  const validate = async (schema: ZodSchema): Promise<Result> => {
     const promises = rows.map((row) => parse(row, schema))
 
     const result = await Promise.all(promises)
