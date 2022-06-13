@@ -1,9 +1,9 @@
 {
   "name": "zod-xlsx",
-  "version": "0.0.0",
+  "version": "0.0.0-semantic-release",
   "license": "MIT",
   "author": "Sidwebworks",
-  "description": "My awesome typescript library",
+  "description": "A xlsx based resource validator using Zod schemas",
   "publishConfig": {
     "access": "public"
   },

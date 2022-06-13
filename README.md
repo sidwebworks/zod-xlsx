@@ -1,42 +1,92 @@
 
----
 
 # ZOD-XLSX
 
-[![npm version](https://badgen.net/npm/v/package)](https://npm.im/package) [![npm downloads](https://badgen.net/npm/dm/@sidwebworks/get-packages)](https://npm.im/@sidwebworks/get-packages)
+![npm version](https://badgen.net/npm/v/zod-xlsx)
+![npm downloads](https://badgen.net/npm/dt/zod-xlsx)
 
-> Get packages from a monorepo (pnpm, yarn, npm, lerna)
+> A xlsx based resource validator using Zod schemas
 
-## Install
+**Supports both ESM and CJS**
+
+## Installation
+> Note: 
+> This package requires [Zod](https://www.npmjs.com/package/zod) and [xlsx](https://www.npmjs.com/package/xlsx) as peer dependencies
 
 ```bash
-npm install xod-xlsx
-# or
-yarn add xod-xlsx
+# With npm
+npm install xod-xlsx xlsx zod
+
+# With yarn
+yarn add xod-xlsx xlsx zod
+
+# With pnpm
+pnpm add xod-xlsx xlsx zod
 ```
 
 ## Usage
 
+The library exports a single function called `createValidator` which takes in a xlsx workbook and creates a validator object. 
+
+Please make sure your sheet (xlsx or xls) file contains only header content for the columns as it's required for the library to function properly.
+
 ```ts
-import { getPackages } from "package"
+import { createValidator } from "zod-xlsx"
+import xlsx from "xlsx"
 
-const workspace = await getPackages(".")
+const workbook = xlsx.readFile(/*path to your file*/)
 
-// For a monorepo:
-// workspace.type => 'monorepo'
-// workspace.npmClient => 'pnpm' | 'yarn' | 'npm'
-// workspace.root => { data, path }
-// workspace.packages => [{ data, path }]
+const validator = createValidator(workbook);
 
-// For a non-monorepo:
-// workspace.type => 'non-monorepo'
-// workspace.npmClient => 'pnpm' | 'yarn' | 'npm'
-// workspace.package => { data, path }
+const schema = z.object({
+  'First Name': z.string(),
+  'Last Name': z.string(),
+  Gender: z.enum(['Male', 'Female']),
+  Country: z.string(),
+  Age: z.number(),
+  Date: z.string(),
+  Id: z.number(),
+});
+
+const result = await validator.validate(schema);
 ```
 
-Type docs: https://paka.dev/npm/package
+**OUTPUT**
+```js
+ {
+   valid: [
+    { issues: [], isValid: true, data: [Object] },
+    { issues: [], isValid: true, data: [Object] },
+    { issues: [], isValid: true, data: [Object] },
+    { issues: [], isValid: true, data: [Object] },
+   ]
+    invalid: [
+    { issues: [Object], isValid: false, data: [Object] },
+    { issues: [Object], isValid: false, data: [Object] },
+    { issues: [Object], isValid: false, data: [Object] },
+    ]
+  }
+```
+
+
+
+## API Reference
+
+### **createValidator**
+Function to create a new validator object with the given workbook.
+It takes an options object as the second arguement.
+
+```ts
+export interface ValidatorOptions {
+  header?: Sheet2JSONOpts["header"]
+  sheetName?: string
+  blankrows?: Sheet2JSONOpts["blankrows"]
+  skipHidden?: Sheet2JSONOpts["skipHidden"]
+}
+```
+> For details of what each option does can be found: [Here](https://docs.sheetjs.com/docs/api/utilities#json)
 
 
 ## License
 
-MIT &copy; [sidwebworks](https://github.com/sponsors/sidwebworks)
+MIT &copy; [sidwebworks](https://github.com/sidwebworks)
