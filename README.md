@@ -17,13 +17,13 @@
 
 ```bash
 # With npm
-npm install xod-xlsx xlsx zod
+npm install zod-xlsx xlsx zod
 
 # With yarn
-yarn add xod-xlsx xlsx zod
+yarn add zod-xlsx xlsx zod
 
 # With pnpm
-pnpm add xod-xlsx xlsx zod
+pnpm add zod-xlsx xlsx zod
 ```
 
 ## Usage
