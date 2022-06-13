@@ -1,7 +1,7 @@
 
 ---
 
-# package
+# ZOD-XLSX
 
 [![npm version](https://badgen.net/npm/v/package)](https://npm.im/package) [![npm downloads](https://badgen.net/npm/dm/@sidwebworks/get-packages)](https://npm.im/@sidwebworks/get-packages)
 
@@ -10,7 +10,9 @@
 ## Install
 
 ```bash
-npm i package
+npm install xod-xlsx
+# or
+yarn add xod-xlsx
 ```
 
 ## Usage
