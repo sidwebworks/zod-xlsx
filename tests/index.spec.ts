@@ -1,5 +1,5 @@
 import path from "path"
-import { assert, it } from "vitest"
+import { assert, it, vitest } from "vitest"
 import { readFile } from "xlsx"
 import z from "zod"
 import { createValidator } from "../src"
@@ -59,4 +59,32 @@ it("returns an array of valid items", async () => {
 
   assert.isNotEmpty(result.valid)
   assert.isEmpty(result.invalid)
+})
+
+it("calls the onValid hook when an item is valid", async () => {
+  const workbook = readFile(path.join(__dirname, "./mocks/demo.xls"))
+
+  const schema = z.object({
+    "First Name": z.string(),
+    "Last Name": z.string(),
+    Gender: z.enum(["Male", "Female"]),
+    Country: z.string(),
+    Age: z.number(),
+    Date: z.string(),
+    Id: z.number(),
+  })
+
+  const spy = vitest.spyOn(console, "log")
+
+  const validator = createValidator(workbook, {
+    onValid: () => {
+      console.log("VALID")
+    },
+  })
+
+  const result = await validator.validate(schema)
+
+  assert.strictEqual(spy.mock.calls.length, result.valid.length)
+
+  spy.mockClear()
 })
