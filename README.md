@@ -80,13 +80,26 @@ It takes an options object as the second arguement.
 
 ```ts
 export interface ValidatorOptions {
+  // Comes from xlsx
   header?: Sheet2JSONOpts["header"]
-  sheetName?: string
   blankrows?: Sheet2JSONOpts["blankrows"]
   skipHidden?: Sheet2JSONOpts["skipHidden"]
+
+  // Zod-xlsx options
+  sheetName?: string
+  onValid?: (data: any) => void
+  onInvalid?: (data: any) => void
 }
 ```
-> For details of what each option does can be found: [Here](https://docs.sheetjs.com/docs/api/utilities#json)
+
+- **sheetName**: name of the sheet to use, defaults to the first sheet in the document.
+
+- **onValid**: hook which gets called after every valid item is processed.
+
+- **onValid**: hook which gets called after every invalid item is processed.
+
+> For details on what each of the xlsx option does can be found: [Here](https://docs.sheetjs.com/docs/api/utilities#json)
+
 
 
 ## License
