@@ -30,7 +30,7 @@ pnpm add zod-xlsx xlsx zod
 
 The library exports a single function called `createValidator` which takes in a xlsx workbook and creates a validator object. 
 
-Please make sure your sheet (xlsx or xls) file contains only header content for the columns as it's required for the library to function properly.
+Please make sure your top row of the sheet (xlsx or xls) file contains only header content for the columns as it's required for the library to function properly.
 
 ```ts
 import { createValidator } from "zod-xlsx"
