@@ -25,10 +25,10 @@ function createValidator(workbook: WorkBook, opts?: ValidatorOptions) {
     header: options.header,
   })
 
-  const parse = async (row: any, schema: ZodSchema) => {
+  const parse = (row: any, schema: ZodSchema) => {
     const data = toObject(row, header)
     try {
-      await schema.parseAsync(data)
+      schema.parse(data)
       options.onValid && options.onValid(data)
       return { issues: [], isValid: true, data }
     } catch (error) {
@@ -40,10 +40,8 @@ function createValidator(workbook: WorkBook, opts?: ValidatorOptions) {
     }
   }
 
-  const validate = async (schema: ZodSchema): Promise<Result> => {
-    const promises = rows.map((row) => parse(row, schema))
-
-    const result = await Promise.all(promises)
+  const validate = (schema: ZodSchema): Result => {
+    const result = rows.map((row) => parse(row, schema))
 
     return {
       valid: result.filter((r) => r.isValid),
