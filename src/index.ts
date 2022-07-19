@@ -40,6 +40,15 @@ function createValidator(workbook: WorkBook, opts?: ValidatorOptions) {
     }
   }
 
+  const validateAsync = (schema: ZodSchema): Promise<Result> => {
+    const result = rows.map((row) => parse(row, schema))
+
+    return Promise.resolve({
+      valid: result.filter((r) => r.isValid),
+      invalid: result.filter((r) => !r.isValid),
+    })
+  }
+
   const validate = (schema: ZodSchema): Result => {
     const result = rows.map((row) => parse(row, schema))
 
@@ -49,7 +58,7 @@ function createValidator(workbook: WorkBook, opts?: ValidatorOptions) {
     }
   }
 
-  return { validate, rows, header }
+  return { validate, rows, header, validateAsync }
 }
 
 export { createValidator }
