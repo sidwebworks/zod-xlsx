@@ -1,18 +1,16 @@
-
-
 # ZOD-XLSX
 
 [![npm version](https://badgen.net/npm/v/zod-xlsx)](https://www.npmjs.com/package/zod-xlsx)
 ![npm downloads](https://badgen.net/npm/dt/zod-xlsx)
 [![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
 
-
 > A xlsx based resource validator using Zod schemas
 
 **Supports both ESM and CJS**
 
 ## Installation
-> Note: 
+
+> Note:
 > This package requires [Zod](https://www.npmjs.com/package/zod) and [xlsx](https://www.npmjs.com/package/xlsx) as peer dependencies
 
 ```bash
@@ -28,7 +26,7 @@ pnpm add zod-xlsx xlsx zod
 
 ## Usage
 
-The library exports a single function called `createValidator` which takes in a xlsx workbook and creates a validator object. 
+The library exports a single function called `createValidator` which takes in a xlsx workbook and creates a validator object.
 
 Please make sure your top row of the sheet (xlsx or xls) file contains only header content for the columns as it's required for the library to function properly.
 
@@ -38,43 +36,43 @@ import xlsx from "xlsx"
 
 const workbook = xlsx.readFile(/*path to your file*/)
 
-const validator = createValidator(workbook);
+const validator = createValidator(workbook)
 
 const schema = z.object({
-  'First Name': z.string(),
-  'Last Name': z.string(),
-  Gender: z.enum(['Male', 'Female']),
+  "First Name": z.string(),
+  "Last Name": z.string(),
+  Gender: z.enum(["Male", "Female"]),
   Country: z.string(),
   Age: z.number(),
   Date: z.string(),
   Id: z.number(),
-});
+})
 
-const result = await validator.validate(schema);
+const result = validator.validate(schema)
 ```
 
 **OUTPUT**
+
 ```js
- {
-   valid: [
+{
+  valid: [
     { issues: [], isValid: true, data: [Object] },
     { issues: [], isValid: true, data: [Object] },
     { issues: [], isValid: true, data: [Object] },
     { issues: [], isValid: true, data: [Object] },
-   ]
-    invalid: [
+  ]
+  invalid: [
     { issues: [Object], isValid: false, data: [Object] },
     { issues: [Object], isValid: false, data: [Object] },
     { issues: [Object], isValid: false, data: [Object] },
-    ]
-  }
+  ]
+}
 ```
-
-
 
 ## API Reference
 
 ### **createValidator**
+
 Function to create a new validator object with the given workbook.
 It takes an options object as the second arguement.
 
@@ -100,7 +98,16 @@ export interface ValidatorOptions {
 
 > For details on what each of the xlsx option does can be found: [Here](https://docs.sheetjs.com/docs/api/utilities#json)
 
+### **validator.validate()**
 
+Synchronously parses all the rows against the given schema and returns the result.
+
+### **validator.validateAsync()**
+
+Asynchronously parses all the rows against the given schema _without blocking the event loop_, it does this using batch processing.
+(500 is the default batch size)
+
+Depending on your usecase, its possible to configure the `batchSize` like so: `validateAsync(schema, { batchSize: 500 })`.
 
 ## License
 

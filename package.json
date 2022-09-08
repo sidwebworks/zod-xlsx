@@ -19,14 +19,12 @@
   },
   "types": "./dist/index.d.ts",
   "scripts": {
-    "postinstall": "npx husky-init",
     "build": "NODE_ENV=production tsup --dts-resolve",
     "dev": "NODE_ENV=development tsup --watch",
     "test": "vitest run",
     "test:watch": "vitest",
     "coverage": "vitest --coverage",
-    "prepublishOnly": "pnpm run build",
-    "prepare": "husky install"
+    "prepublishOnly": "pnpm run build"
   },
   "devDependencies": {
     "@commitlint/cli": "17.0.2",

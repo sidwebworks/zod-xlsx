@@ -5,7 +5,7 @@
 import { Sheet2JSONOpts } from "xlsx"
 import type { ZodIssue } from "zod"
 
-type Resource = {
+export type Resource = {
   issues: ZodIssue[]
   isValid: boolean
   data: Record<string, any>

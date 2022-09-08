@@ -34,7 +34,7 @@ it("returns an array of invalid items", async () => {
 
   const validator = createValidator(workbook)
 
-  const result = await validator.validate(badSchema)
+  const result = validator.validate(badSchema)
 
   assert.isNotEmpty(result.invalid)
   assert.isEmpty(result.valid)
@@ -55,7 +55,7 @@ it("returns an array of valid items", async () => {
 
   const validator = createValidator(workbook)
 
-  const result = await validator.validate(schema)
+  const result = validator.validate(schema)
 
   assert.isNotEmpty(result.valid)
   assert.isEmpty(result.invalid)
@@ -74,17 +74,36 @@ it("calls the onValid hook when an item is valid", async () => {
     Id: z.number(),
   })
 
-  const spy = vitest.spyOn(console, "log")
+  const fn = vitest.fn(() => {})
 
   const validator = createValidator(workbook, {
-    onValid: () => {
-      console.log("VALID")
-    },
+    onValid: fn,
   })
 
-  const result = await validator.validate(schema)
+  const result = validator.validate(schema)
 
-  assert.strictEqual(spy.mock.calls.length, result.valid.length)
+  assert.strictEqual(fn.mock.calls.length, result.valid.length)
 
-  spy.mockClear()
+  fn.mockClear()
+})
+
+it("processes batches asynchronously", async () => {
+  const workbook = readFile(path.join(__dirname, "./mocks/demo.xls"))
+
+  const schema = z.object({
+    "First Name": z.string(),
+    "Last Name": z.string(),
+    Gender: z.enum(["Male", "Female"]),
+    Country: z.string(),
+    Age: z.number(),
+    Date: z.string(),
+    Id: z.number(),
+  })
+
+  const validator = createValidator(workbook)
+
+  const result = await validator.validateAsync(schema, { batchSize: 250 })
+
+  assert.isNotEmpty(result.valid)
+  assert.isEmpty(result.invalid)
 })

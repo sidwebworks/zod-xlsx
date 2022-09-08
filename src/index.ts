@@ -1,6 +1,6 @@
 import { utils, WorkBook } from "xlsx"
 import { ZodError, ZodSchema } from "zod"
-import type { Result, ValidatorOptions } from "./types"
+import type { Resource, Result, ValidatorOptions } from "./types"
 import { defaultsOptions, toObject } from "./utils"
 
 function createValidator(workbook: WorkBook, opts?: ValidatorOptions) {
@@ -26,7 +26,7 @@ function createValidator(workbook: WorkBook, opts?: ValidatorOptions) {
   })
 
   const parse = (row: any, schema: ZodSchema) => {
-    const data = toObject(row, header)
+    const data = toObject(row, header as string[])
     try {
       schema.parse(data)
       options.onValid && options.onValid(data)
@@ -40,12 +40,35 @@ function createValidator(workbook: WorkBook, opts?: ValidatorOptions) {
     }
   }
 
-  const validateAsync = (schema: ZodSchema): Promise<Result> => {
-    const result = rows.map((row) => parse(row, schema))
+  const validateAsync = (
+    schema: ZodSchema,
+    options?: { batchSize: number },
+  ): Promise<Result> => {
+    const batchSize = options?.batchSize ?? 500
 
-    return Promise.resolve({
-      valid: result.filter((r) => r.isValid),
-      invalid: result.filter((r) => !r.isValid),
+    return new Promise<Result>((resolve) => {
+      let i = 1
+      const result: Resource[] = []
+
+      async function parseBatch() {
+        const batch = rows.slice(i, i + batchSize)
+        i += batchSize
+
+        if (!batch.length) {
+          return resolve({
+            valid: result.filter((r) => r.isValid),
+            invalid: result.filter((r) => !r.isValid),
+          })
+        }
+
+        const processed = batch.map((row) => parse(row, schema))
+
+        result.push(...processed)
+
+        setTimeout(parseBatch, 0)
+      }
+
+      parseBatch()
     })
   }
 
