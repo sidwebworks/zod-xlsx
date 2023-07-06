@@ -23,7 +23,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: 18.x
 
       - name: Cache ~/.pnpm-store
         uses: actions/cache@v2
@@ -47,7 +47,7 @@ jobs:
         run: npm run test
 
       - name: Release
-        run: pnpx semantic-release --branches main
+        run: npx -p node@v18-lts -c "npx semantic-release --branches main"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
