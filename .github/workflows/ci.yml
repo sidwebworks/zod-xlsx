@@ -20,7 +20,6 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-
       - uses: actions/setup-node@v3
         with:
           node-version: 18.x
@@ -47,7 +46,7 @@ jobs:
         run: npm run test
 
       - name: Release
-        run: npx -p node@v18-lts -c "npx semantic-release --branches main"
+        run: pnpx semantic-release --branches main
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
