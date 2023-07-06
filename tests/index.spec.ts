@@ -107,3 +107,48 @@ it("processes batches asynchronously", async () => {
   assert.isNotEmpty(result.valid)
   assert.isEmpty(result.invalid)
 })
+
+it("returns array of valid and transformed items", async () => {
+  const workbook = readFile(path.join(__dirname, "./mocks/demo.xls"))
+  
+  const schema = z.object({
+    "First Name": z.string(),
+    "Last Name": z.string(),
+    Gender: z.enum(["Male", "Female"]),
+    Country: z.string(),
+    Age: z.number(),
+    Date: z.preprocess((val) => String(val).replace(/\//g, "-"), z.string()).transform((val) => new Date(val)),
+    Id: z.number(),
+  })
+
+  const validator = createValidator(workbook)
+
+  const result =  await validator.validate(schema)
+
+  assert.isEmpty(result.invalid)
+  assert.isNotEmpty(result.valid)
+
+  assert.instanceOf(result.valid[0].data.Date, Date)
+})
+
+it("process and transforms batches asynchronously", async () => {
+  const workbook = readFile(path.join(__dirname, "./mocks/demo.xls"))
+
+  const schema = z.object({
+    "First Name": z.string(),
+    "Last Name": z.string(),
+    Gender: z.enum(["Male", "Female"]),
+    Country: z.string(),
+    Age: z.number(),
+    Date: z.preprocess((val) => String(val).replace(/\//g, "-"), z.string()).transform((val) => new Date(val)),
+    Id: z.number(),
+  })
+
+  const validator = createValidator(workbook)
+
+  const result = await validator.validateAsync(schema, { batchSize: 250 })
+
+  assert.isNotEmpty(result.valid)
+  assert.isEmpty(result.invalid)
+  assert.instanceOf(result.valid[0].data.Date, Date)
+})

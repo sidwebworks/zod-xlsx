@@ -28,9 +28,9 @@ function createValidator(workbook: WorkBook, opts?: ValidatorOptions) {
   const parse = (row: any, schema: ZodSchema) => {
     const data = toObject(row, header as string[])
     try {
-      schema.parse(data)
+      const parsedData = schema.parse(data)
       options.onValid && options.onValid(data)
-      return { issues: [], isValid: true, data }
+      return { issues: [], isValid: true, data: parsedData }
     } catch (error) {
       if (error instanceof ZodError) {
         options.onInvalid && options.onInvalid(data)
