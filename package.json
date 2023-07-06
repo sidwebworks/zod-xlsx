@@ -35,9 +35,7 @@
     "prettier": "2.5.1",
     "tsup": "6.0.1",
     "typescript": "4.7.3",
-    "vitest": "0.12.6",
-    "xlsx": "^0.18.5",
-    "zod": "^3.17.3"
+    "vitest": "0.12.6"
   },
   "commitlint": {
     "extends": [
