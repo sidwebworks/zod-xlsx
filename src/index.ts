@@ -47,7 +47,7 @@ function createValidator(workbook: WorkBook, opts?: ValidatorOptions) {
     const batchSize = options?.batchSize ?? 500
 
     return new Promise<Result>((resolve) => {
-      let i = 1
+      let i = 0
       const result: Resource[] = []
 
       async function parseBatch() {
