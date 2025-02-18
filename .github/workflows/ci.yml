@@ -36,7 +36,7 @@ jobs:
             ${{ runner.os }}-${{ matrix.node-version }}-build-
             ${{ runner.os }}-
       - name: Enable corepack
-        run: corepack enable pnpm
+        run: corepack enable pnpm && corepack prepare --activate
 
       - name: Install deps
         run: pnpm i
