@@ -3,7 +3,12 @@
  */
 
 import { Sheet2JSONOpts } from "xlsx"
-import type { ZodIssue } from "zod"
+import * as z3 from "zod/v3"
+import * as z4 from "zod/v4/core"
+
+export type ZodSchema = z3.ZodTypeAny | z4.$ZodType
+export type ZodIssue = z3.ZodIssue | z4.$ZodIssue
+export const ZodError = z3.ZodError || z4.$ZodError
 
 export type Resource = {
   issues: ZodIssue[]
